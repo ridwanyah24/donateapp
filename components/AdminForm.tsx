@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { formatNaira } from "@/lib/format";
 import type { TrackerResponse } from "@/lib/supabase";
+import SectionHeading from "./SectionHeading";
 
 export default function AdminForm() {
   const [currentTotal, setCurrentTotal] = useState(0);
@@ -77,90 +78,105 @@ export default function AdminForm() {
   }
 
   return (
-    <main className="mx-auto min-h-screen max-w-lg px-4 py-10">
-      <div className="mb-6">
-        <Link
-          href="/"
-          className="text-sm text-white/50 transition hover:text-orange-brand"
-        >
-          ← Back to tracker
-        </Link>
+    <div className="min-h-screen bg-cream">
+      <div className="hero-gradient px-4 py-8 sm:px-6">
+        <div className="mx-auto max-w-lg">
+          <Link
+            href="/"
+            className="text-sm font-medium text-white/60 transition hover:text-white"
+          >
+            ← Back to tracker
+          </Link>
+          <h1 className="mt-4 text-2xl font-bold text-white">Admin Dashboard</h1>
+          <p className="mt-1 text-sm text-white/60">VBS 2026 fundraising</p>
+        </div>
       </div>
 
-      <div className="card-glass rounded-2xl p-6 sm:p-8">
-        <h1 className="mb-1 text-xl font-bold">Admin</h1>
-        <p className="mb-6 text-sm text-white/60">
-          Update the VBS 2026 fundraising total
-        </p>
-
-        {!loadingData && (
-          <p className="mb-6 rounded-lg bg-white/5 px-4 py-3 text-sm">
-            Current total:{" "}
-            <span className="font-semibold text-orange-brand">
-              {formatNaira(currentTotal)}
-            </span>
-            <span className="text-white/50"> / {formatNaira(goal)} goal</span>
-          </p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm text-white/60">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:border-orange-brand"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm text-white/60">
-              New total raised (₦)
-            </label>
-            <input
-              type="number"
-              min="0"
-              step="1"
-              value={totalRaised}
-              onChange={(e) => setTotalRaised(e.target.value)}
-              required
-              disabled={loadingData}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:border-orange-brand disabled:opacity-50"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm text-white/60">
-              Supporter name (optional)
-            </label>
-            <input
-              type="text"
-              value={supporterName}
-              onChange={(e) => setSupporterName(e.target.value)}
-              placeholder="e.g. John & Jane Doe"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-white outline-none focus:border-orange-brand"
-            />
-          </div>
-
-          {message && (
-            <p
-              className={`text-sm ${message.type === "success" ? "text-green-400" : "text-red-400"}`}
-            >
-              {message.text}
-            </p>
+      <main className="mx-auto max-w-lg px-4 py-8 sm:px-6">
+        <div className="card-elevated p-6 sm:p-8">
+          {!loadingData && (
+            <div className="mb-6 rounded-2xl bg-cream p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                Current total
+              </p>
+              <p className="mt-1 text-2xl font-extrabold text-navy">
+                {formatNaira(currentTotal)}
+              </p>
+              <p className="mt-0.5 text-sm text-muted">of {formatNaira(goal)} goal</p>
+            </div>
           )}
 
-          <button
-            type="submit"
-            disabled={loading || loadingData}
-            className="w-full rounded-lg bg-orange-brand px-4 py-2.5 text-sm font-semibold text-navy transition hover:bg-orange-dark disabled:opacity-50"
-          >
-            {loading ? "Saving…" : "Save"}
-          </button>
-        </form>
-      </div>
-    </main>
+          <SectionHeading
+            label="Update"
+            title="Set new total raised"
+            description="Enter the cumulative amount donated so far."
+          />
+
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-ink">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded-xl border border-cream-dark bg-cream px-4 py-2.5 text-ink outline-none focus:border-orange-brand focus:ring-2 focus:ring-orange-brand/20"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-ink">
+                New total raised (₦)
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                value={totalRaised}
+                onChange={(e) => setTotalRaised(e.target.value)}
+                required
+                disabled={loadingData}
+                className="w-full rounded-xl border border-cream-dark bg-cream px-4 py-2.5 text-ink outline-none focus:border-orange-brand focus:ring-2 focus:ring-orange-brand/20 disabled:opacity-50"
+              />
+            </div>
+
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-ink">
+                Supporter name (optional)
+              </label>
+              <input
+                type="text"
+                value={supporterName}
+                onChange={(e) => setSupporterName(e.target.value)}
+                placeholder="e.g. John & Jane Doe"
+                className="w-full rounded-xl border border-cream-dark bg-cream px-4 py-2.5 text-ink outline-none focus:border-orange-brand focus:ring-2 focus:ring-orange-brand/20"
+              />
+            </div>
+
+            {message && (
+              <p
+                className={`rounded-xl px-4 py-3 text-sm font-medium ${
+                  message.type === "success"
+                    ? "bg-green-50 text-green-700"
+                    : "bg-red-50 text-red-600"
+                }`}
+              >
+                {message.text}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading || loadingData}
+              className="w-full rounded-xl bg-orange-brand py-3 text-sm font-bold text-white transition hover:bg-orange-dark active:scale-[0.98] disabled:opacity-50"
+            >
+              {loading ? "Saving…" : "Save changes"}
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
   );
 }

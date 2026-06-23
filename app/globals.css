@@ -1,37 +1,63 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #1a2a4a;
-  --color-navy-light: #243656;
-  --color-purple-brand: #6b3fa0;
-  --color-orange-brand: #f5a623;
-  --color-orange-dark: #d4890a;
+  --color-navy: #152238;
+  --color-navy-mid: #1e3354;
+  --color-navy-light: #2a4470;
+  --color-purple-brand: #7c3aed;
+  --color-purple-soft: #ede9fe;
+  --color-orange-brand: #ea8c00;
+  --color-orange-light: #fff7ed;
+  --color-orange-dark: #c67600;
+  --color-cream: #faf8f5;
+  --color-cream-dark: #f0ebe3;
+  --color-ink: #1a2332;
+  --color-muted: #64748b;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
-  background: linear-gradient(180deg, #0f1a30 0%, #1a2a4a 40%, #1e3050 100%);
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
   min-height: 100vh;
 }
 
+.hero-gradient {
+  background:
+    radial-gradient(ellipse 80% 60% at 90% 10%, rgba(234, 140, 0, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 10% 90%, rgba(124, 58, 237, 0.25) 0%, transparent 50%),
+    linear-gradient(160deg, #0f1c32 0%, #1a3055 45%, #243f6a 100%);
+}
+
 .progress-gradient {
-  background: linear-gradient(90deg, #1a2a4a 0%, #6b3fa0 50%, #f5a623 100%);
+  background: linear-gradient(90deg, #1e3354 0%, #7c3aed 55%, #ea8c00 100%);
 }
 
-.flashlight-beam {
-  background: radial-gradient(
-    ellipse 120% 80% at 100% 0%,
-    rgba(245, 166, 35, 0.35) 0%,
-    rgba(107, 63, 160, 0.15) 40%,
-    transparent 70%
-  );
+.card {
+  background: white;
+  border: 1px solid #e8e2d9;
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgba(21, 34, 56, 0.04),
+    0 8px 24px rgba(21, 34, 56, 0.06);
 }
 
-.card-glass {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(12px);
+.card-elevated {
+  background: white;
+  border: 1px solid #e8e2d9;
+  border-radius: 1.5rem;
+  box-shadow:
+    0 4px 6px rgba(21, 34, 56, 0.04),
+    0 20px 48px rgba(21, 34, 56, 0.1);
+}
+
+.section-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-orange-brand);
 }
 
 @keyframes shimmer {
@@ -42,4 +68,13 @@ body {
 .progress-shimmer {
   background-size: 200% 100%;
   animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.pulse-soft {
+  animation: pulse-soft 2.5s ease-in-out infinite;
 }

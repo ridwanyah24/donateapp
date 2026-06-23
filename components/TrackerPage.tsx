@@ -3,13 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import type { TrackerResponse } from "@/lib/supabase";
 import Footer from "./Footer";
-import Header from "./Header";
+import Hero from "./Hero";
 import HowToGive from "./HowToGive";
 import Partnership from "./Partnership";
 import ProgressTracker from "./ProgressTracker";
 import SupportersList from "./SupportersList";
 import VenueContact from "./VenueContact";
-import VbsBanner from "./VbsBanner";
 
 const POLL_INTERVAL_MS = 30_000;
 
@@ -48,37 +47,46 @@ export default function TrackerPage() {
   }, [fetchTracker]);
 
   return (
-    <main className="pb-8">
-      <Header />
-      <VbsBanner />
+    <>
+      <Hero />
 
-      {error ? (
-        <div className="mx-auto max-w-3xl px-4 py-6">
-          <p className="rounded-xl bg-red-500/10 px-4 py-3 text-center text-sm text-red-300">
-            {error}
-          </p>
-        </div>
-      ) : loading ? (
-        <div className="mx-auto max-w-3xl px-4 py-12 text-center text-white/40">
-          Loading tracker…
-        </div>
-      ) : (
-        <>
-          <ProgressTracker
-            totalRaised={data.totalRaised}
-            goal={data.goal}
-            percent={data.percent}
-            remaining={data.remaining}
-            milestone={data.milestone}
-          />
-          <SupportersList supporters={data.supporters} />
-        </>
-      )}
+      <main className="pb-16">
+        {error ? (
+          <div className="mx-auto max-w-6xl px-4 pt-10 sm:px-6">
+            <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-center text-sm text-red-600">
+              {error}
+            </p>
+          </div>
+        ) : loading ? (
+          <div className="mx-auto max-w-6xl px-4 pt-16 text-center text-muted sm:px-6">
+            <div className="mx-auto mb-3 h-8 w-8 animate-spin rounded-full border-2 border-orange-brand border-t-transparent" />
+            Loading tracker…
+          </div>
+        ) : (
+          <>
+            <ProgressTracker
+              totalRaised={data.totalRaised}
+              goal={data.goal}
+              percent={data.percent}
+              remaining={data.remaining}
+              milestone={data.milestone}
+            />
+            {data.supporters.length > 0 && (
+              <div className="mx-auto mt-8 max-w-6xl px-4 sm:px-6">
+                <SupportersList supporters={data.supporters} />
+              </div>
+            )}
+          </>
+        )}
 
-      <HowToGive />
-      <VenueContact />
+        <div className="mx-auto mt-10 grid max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-2">
+          <HowToGive />
+          <VenueContact />
+        </div>
+      </main>
+
       <Partnership />
       <Footer />
-    </main>
+    </>
   );
 }

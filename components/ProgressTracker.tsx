@@ -2,7 +2,7 @@
 
 import { motion, useSpring, useTransform } from "framer-motion";
 import { useEffect } from "react";
-import { formatNaira } from "@/lib/format";
+import SectionHeading from "./SectionHeading";
 
 type ProgressTrackerProps = {
   totalRaised: number;
@@ -12,73 +12,56 @@ type ProgressTrackerProps = {
   milestone: string;
 };
 
-function AnimatedCounter({ value }: { value: number }) {
+function AnimatedPercent({ value }: { value: number }) {
   const spring = useSpring(0, { stiffness: 60, damping: 20 });
-  const display = useTransform(spring, (v) => formatNaira(Math.round(v)));
+  const display = useTransform(spring, (v) => `${Math.round(v)}%`);
 
   useEffect(() => {
     spring.set(value);
   }, [spring, value]);
 
   return (
-    <motion.span className="text-3xl font-extrabold text-orange-brand sm:text-4xl">
+    <motion.span className="text-5xl font-extrabold tracking-tight text-navy sm:text-6xl lg:text-7xl">
       {display}
     </motion.span>
   );
 }
 
 export default function ProgressTracker({
-  totalRaised,
-  goal,
   percent,
-  remaining,
   milestone,
 }: ProgressTrackerProps) {
   return (
-    <section className="mx-auto max-w-3xl px-4 py-6">
-      <div className="card-glass rounded-2xl p-6 sm:p-8">
-        <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-white/50">
-          Fundraising Progress
-        </p>
-
-        <div className="mb-4 inline-block rounded-full bg-purple-brand/30 px-4 py-1.5 text-sm font-medium text-purple-brand ring-1 ring-purple-brand/40">
-          {milestone}
+    <section className="relative -mt-8 px-4 sm:px-6">
+      <div className="card-elevated mx-auto max-w-6xl p-6 sm:p-10">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <SectionHeading
+            label="Fundraising Progress"
+            title="Help us reach our goal"
+            description="Every gift helps light a child's path at VBS 2026."
+          />
+          <div className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-purple-soft px-4 py-2 text-sm font-semibold text-purple-brand">
+            <span className="pulse-soft h-2 w-2 rounded-full bg-purple-brand" />
+            {milestone}
+          </div>
         </div>
 
-        <div className="mb-6">
-          <p className="mb-1 text-sm text-white/60">Total Raised</p>
-          <AnimatedCounter value={totalRaised} />
-          <p className="mt-1 text-sm text-white/50">
-            Goal: {formatNaira(goal)}
-          </p>
+        <div className="mb-8 text-center sm:text-left">
+          <p className="mb-2 text-sm font-medium text-muted">Progress so far</p>
+          <AnimatedPercent value={percent} />
         </div>
 
-        <div className="mb-3 h-4 overflow-hidden rounded-full bg-white/10">
+        <div className="relative mb-2 h-5 overflow-hidden rounded-full bg-cream-dark">
           <motion.div
             className="progress-gradient progress-shimmer h-full rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${percent}%` }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
+            transition={{ duration: 1.4, ease: "easeOut" }}
           />
         </div>
-
-        <div className="mb-6 flex justify-between text-sm">
-          <span className="font-semibold text-orange-brand">{percent}% raised</span>
-          <span className="text-white/60">{formatNaira(remaining)} remaining</span>
-        </div>
-
-        <div className="flex flex-wrap gap-4 border-t border-white/10 pt-4 text-sm text-white/70">
-          <span>
-            <strong className="text-white">400+</strong> Children
-          </span>
-          <span className="text-white/30">·</span>
-          <span>
-            <strong className="text-white">5</strong> Days
-          </span>
-          <span className="text-white/30">·</span>
-          <span>
-            Ages <strong className="text-white">3–16</strong>
-          </span>
+        <div className="flex justify-between text-xs font-medium text-muted">
+          <span>0%</span>
+          <span>100%</span>
         </div>
       </div>
     </section>
