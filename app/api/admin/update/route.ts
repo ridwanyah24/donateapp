@@ -8,26 +8,43 @@ type UpdateBody = {
 };
 
 export async function POST(request: NextRequest) {
+  let body: UpdateBody;
+
   try {
-    const body = (await request.json()) as UpdateBody;
-    const adminPassword = process.env.ADMIN_PASSWORD ?? "luminos2026";
+    body = (await request.json()) as UpdateBody;
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+  }
 
-    if (!body.password || body.password !== adminPassword) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 401 });
-    }
+  const adminPassword = process.env.ADMIN_PASSWORD ?? "luminos2026";
 
-    if (
-      body.totalRaised === undefined ||
-      typeof body.totalRaised !== "number" ||
-      body.totalRaised < 0 ||
-      !Number.isFinite(body.totalRaised)
-    ) {
-      return NextResponse.json(
-        { error: "Invalid total raised amount" },
-        { status: 400 }
-      );
-    }
+  if (!body.password || body.password !== adminPassword) {
+    return NextResponse.json({ error: "Invalid password" }, { status: 401 });
+  }
 
+  if (
+    body.totalRaised === undefined ||
+    typeof body.totalRaised !== "number" ||
+    body.totalRaised < 0 ||
+    !Number.isFinite(body.totalRaised)
+  ) {
+    return NextResponse.json(
+      { error: "Invalid total raised amount" },
+      { status: 400 }
+    );
+  }
+
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json(
+      {
+        error:
+          "Server not configured. Add SUPABASE_SERVICE_ROLE_KEY to .env.local (Supabase → Project Settings → API → service_role key), then restart the dev server.",
+      },
+      { status: 500 }
+    );
+  }
+
+  try {
     const supabase = createSupabaseAdmin();
 
     const { error: updateError } = await supabase
@@ -40,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     if (updateError) {
       return NextResponse.json(
-        { error: "Failed to update total" },
+        { error: "Failed to update total. Check that schema.sql has been run in Supabase." },
         { status: 500 }
       );
     }
@@ -61,6 +78,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Database connection failed. Check your Supabase credentials." },
+      { status: 500 }
+    );
   }
 }

@@ -9,6 +9,7 @@ import SectionHeading from "./SectionHeading";
 export default function AdminForm() {
   const [currentTotal, setCurrentTotal] = useState(0);
   const [goal, setGoal] = useState(3_000_000);
+  const [percent, setPercent] = useState(0);
   const [loadingData, setLoadingData] = useState(true);
   const [password, setPassword] = useState("");
   const [totalRaised, setTotalRaised] = useState("");
@@ -25,6 +26,7 @@ export default function AdminForm() {
       const json = (await res.json()) as TrackerResponse;
       setCurrentTotal(json.totalRaised);
       setGoal(json.goal);
+      setPercent(json.percent);
       setTotalRaised(String(json.totalRaised));
     } catch {
       setMessage({ type: "error", text: "Could not load current total." });
@@ -68,8 +70,10 @@ export default function AdminForm() {
       }
 
       setCurrentTotal(parsed);
+      setPercent(goal > 0 ? Math.min(100, Math.round((parsed / goal) * 100)) : 0);
       setSupporterName("");
       setMessage({ type: "success", text: "Saved successfully!" });
+      fetchTracker();
     } catch {
       setMessage({ type: "error", text: "Network error. Please try again." });
     } finally {
@@ -89,22 +93,47 @@ export default function AdminForm() {
           </Link>
           <h1 className="mt-4 text-2xl font-bold text-white">Admin Dashboard</h1>
           <p className="mt-1 text-sm text-white/60">VBS 2026 fundraising</p>
+
+          {!loadingData && (
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+                <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                  Total gotten
+                </p>
+                <p className="mt-1 text-xl font-extrabold text-orange-brand sm:text-2xl">
+                  {formatNaira(currentTotal)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
+                <p className="text-xs font-semibold uppercase tracking-wide text-white/60">
+                  Target
+                </p>
+                <p className="mt-1 text-xl font-extrabold text-white sm:text-2xl">
+                  {formatNaira(goal)}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {!loadingData && (
+            <div className="mt-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur-sm">
+              <div className="mb-2 flex justify-between text-xs font-medium text-white/60">
+                <span>{percent}% of target reached</span>
+                <span>{formatNaira(Math.max(0, goal - currentTotal))} remaining</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="progress-gradient h-full rounded-full transition-all duration-500"
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
       <main className="mx-auto max-w-lg px-4 py-8 sm:px-6">
         <div className="card-elevated p-6 sm:p-8">
-          {!loadingData && (
-            <div className="mb-6 rounded-2xl bg-cream p-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                Current total
-              </p>
-              <p className="mt-1 text-2xl font-extrabold text-navy">
-                {formatNaira(currentTotal)}
-              </p>
-              <p className="mt-0.5 text-sm text-muted">of {formatNaira(goal)} goal</p>
-            </div>
-          )}
 
           <SectionHeading
             label="Update"

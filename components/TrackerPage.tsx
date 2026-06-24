@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { TrackerResponse } from "@/lib/supabase";
+import BudgetTable from "./BudgetTable";
 import Footer from "./Footer";
 import Hero from "./Hero";
 import HowToGive from "./HowToGive";
@@ -78,6 +79,10 @@ export default function TrackerPage() {
             )}
           </>
         )}
+
+        <div className="mx-auto mt-10 max-w-6xl px-4 sm:px-6">
+          <BudgetTable />
+        </div>
 
         <div className="mx-auto mt-10 grid max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-2">
           <HowToGive />
